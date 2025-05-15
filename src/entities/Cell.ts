@@ -1,9 +1,52 @@
-import type { ICell } from "../types";
+import { colors } from "../config";
+import { CellType, type ICell } from "../types";
 
-export class Cell implements ICell {
+export class EmptyCell implements ICell {
   color: string;
+  type: CellType;
 
-  constructor(color: string) {
-    this.color = color;
+  constructor() {
+    this.color = colors[CellType.EMPTY];
+    this.type = CellType.EMPTY;
+  }
+}
+
+export class TreeCell implements ICell {
+  color: string;
+  type: CellType;
+
+  constructor() {
+    this.color = colors[CellType.TREE];
+    this.type = CellType.TREE;
+  }
+}
+
+export class StoreCell implements ICell {
+  color: string;
+  type: CellType;
+
+  constructor() {
+    this.color = colors[CellType.STORE];
+    this.type = CellType.STORE;
+  }
+}
+
+export class LumberjackCell implements ICell {
+  color: string;
+  type: CellType;
+
+  constructor() {
+    this.color = colors[CellType.LUMBERJACK];
+    this.type = CellType.LUMBERJACK;
+  }
+}
+
+export class CutTreeCell implements ICell {
+  color: string;
+  type: CellType;
+
+  constructor() {
+    this.color = colors[CellType.CUT_TREE];
+    this.type = CellType.CUT_TREE;
   }
 }
