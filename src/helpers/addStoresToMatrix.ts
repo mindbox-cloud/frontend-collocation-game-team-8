@@ -1,5 +1,7 @@
-import type { IMatrix } from "../types";
-import { StoreCell } from "../entities/Cell";
+import { UnitType, type IMatrix } from "../types";
+
+import { Unit } from "../entities/Unit";
+import { DEFAULT_STORE_INVENTORY } from "../constants";
 
 export const addStoresToMatrix = ({
   matrix,
@@ -9,8 +11,6 @@ export const addStoresToMatrix = ({
   storeCount: number;
 }): IMatrix => {
   Array.from({ length: storeCount }, () => {
-    const store = new StoreCell();
-
     const emptyCells = matrix.getEmptyCells();
 
     const emptyCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
@@ -20,7 +20,9 @@ export const addStoresToMatrix = ({
       j: emptyCell.j,
     };
 
-    matrix.rows[position.i][position.j] = store;
+    matrix.stores.push(
+      new Unit(position, DEFAULT_STORE_INVENTORY, UnitType.STORE)
+    );
   });
 
   return matrix;

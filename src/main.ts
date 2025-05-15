@@ -5,15 +5,17 @@ import { Matrix } from "./entities/Matrix";
 import { addStoresToMatrix } from "./helpers/addStoresToMatrix";
 import { addLumberjacksToMatrix } from "./helpers/addLumberjacksToMatrix";
 import { addTreesToMatrix } from "./helpers/addTreesToMatrix";
-import { moveLumberjacks } from "./helpers/moveLumberjacks";
+import { moveLumberjacks } from "./helpers/move/moveLumberjacks";
 
 const config = {
-  emptyCellTreeGrowthPossibility: 0.3,
-  cutTreeTreeGrowthPossibility: 0.1,
-  rowCount: 10,
-  columnCount: 10,
-  storeCount: 3,
-  lumberjackCount: 3,
+  emptyCellTreeGrowthPossibility:
+    Number(localStorage.getItem("emptyCellTreeGrowthPossibility")) || 0.3,
+  cutTreeTreeGrowthPossibility:
+    Number(localStorage.getItem("cutTreeTreeGrowthPossibility")) || 0.1,
+  rowCount: Number(localStorage.getItem("rowCount")) || 10,
+  columnCount: Number(localStorage.getItem("columnCount")) || 10,
+  storeCount: Number(localStorage.getItem("storeCount")) || 3,
+  lumberjackCount: Number(localStorage.getItem("lumberjackCount")) || 3,
 };
 
 let matrix: IMatrix = new Matrix({
@@ -53,6 +55,7 @@ const createInput = (
   input.style.width = "60px";
 
   input.addEventListener("change", (e) => {
+    localStorage.setItem(key, (e.target as HTMLInputElement).value);
     config[key] = Number((e.target as HTMLInputElement).value);
     restartSimulation();
   });
@@ -118,13 +121,13 @@ const restartSimulation = () => {
     if (elapsed >= 1000) {
       app.stage.removeChildren();
 
+      moveLumberjacks({ matrix });
+
       addTreesToMatrix({
         matrix,
         emptyCellTreeGrowthPossibility: config.emptyCellTreeGrowthPossibility,
         cutTreeTreeGrowthPossibility: config.cutTreeTreeGrowthPossibility,
       });
-
-      moveLumberjacks({ matrix });
 
       convertMatrixToGraphic(matrix, 50).forEach((graphic) => {
         app.stage.addChild(graphic);
