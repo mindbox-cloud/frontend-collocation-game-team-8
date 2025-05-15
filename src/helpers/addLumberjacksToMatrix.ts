@@ -1,5 +1,5 @@
-import type { IMatrix } from "../types";
-import { LumberjackCell } from "../entities/Cell";
+import type {IMatrix} from "../types";
+import { Unit } from "../entities/Cell";
 
 export const addLumberjacksToMatrix = ({
   matrix,
@@ -7,23 +7,21 @@ export const addLumberjacksToMatrix = ({
 }: {
   matrix: IMatrix;
   lumberjackCount: number;
-}): IMatrix => {
-  Array.from({ length: lumberjackCount }, () => {
-    const lumberjack = new LumberjackCell();
+}):  IMatrix => {
+  for (let i = 0; i < lumberjackCount; i++) {
+    const availableCells = matrix.getAvailableCells();
 
-    const emptyCells = matrix.getEmptyCells();
+    const emptyCell = availableCells[Math.floor(Math.random() * availableCells.length)];
 
-    const emptyCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    if (!emptyCell) {
-      return;
+    if (emptyCell) {
+      const position = {
+        i: emptyCell.i,
+        j: emptyCell.j,
+      };
+
+      matrix.units.push(new Unit(position))
     }
-    const position = {
-      i: emptyCell.i,
-      j: emptyCell.j,
-    };
-
-    matrix.rows[position.i][position.j] = lumberjack;
-  });
+  }
 
   return matrix;
 };

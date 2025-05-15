@@ -7,10 +7,12 @@ export const convertMatrixToGraphic = (
 ): Array<Graphics> => {
   const graphics = matrix.rows.reduce<Array<Graphics>>((acc, row, i) => {
     row.forEach((cell, j) => {
+      const checkUnitOnCell = matrix.units.some(unit => unit.position.i === i && unit.position.j === j);
+
       const newCell = createGraphics({
         x: i * cellSize,
         y: j * cellSize,
-        color: cell.color,
+        color: checkUnitOnCell ? 'orange' : cell.color,
         size: cellSize,
       });
 

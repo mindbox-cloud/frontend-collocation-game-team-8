@@ -1,5 +1,21 @@
 import { colors } from "../config";
-import { CellType, type ICell } from "../types";
+import {CellType, type Coordinates, type ICell, type IUnit} from "../types";
+import {DEFAULT_INVENTORY} from "../constants.ts";
+
+
+export class Unit implements IUnit {
+  inventory
+  position
+
+  constructor(position: Coordinates) {
+    this.position = position;
+    this.inventory = DEFAULT_INVENTORY
+  }
+
+  collect(treeWeight: number): void {this.inventory.currentCapacity+= treeWeight}
+
+  isEnoughSpace(treeWeight: number) {return this.inventory.currentCapacity <= this.inventory.maxCapacity - treeWeight;}
+}
 
 export class EmptyCell implements ICell {
   color: string;
@@ -28,16 +44,6 @@ export class StoreCell implements ICell {
   constructor() {
     this.color = colors[CellType.STORE];
     this.type = CellType.STORE;
-  }
-}
-
-export class LumberjackCell implements ICell {
-  color: string;
-  type: CellType;
-
-  constructor() {
-    this.color = colors[CellType.LUMBERJACK];
-    this.type = CellType.LUMBERJACK;
   }
 }
 

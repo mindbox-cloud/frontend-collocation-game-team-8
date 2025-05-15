@@ -32,7 +32,21 @@ export interface IMatrix {
   rows: Array<Array<ICell>>;
   getEmptyCells(): Array<Coordinates>;
   getCutTrees(): Array<Coordinates>;
-  getLumberjacks(): Array<Coordinates>;
+  getLumberjacks(): Array<IUnit>;
   getTrees(): Array<Coordinates>;
   getStores(): Array<Coordinates>;
+  getAvailableCells(): Array<Coordinates>;
+  units: IUnit[];
+}
+
+export type Inventory = {
+  maxCapacity: number;
+  currentCapacity: number;
+}
+
+export interface IUnit {
+  position: Coordinates;
+  inventory: Inventory;
+  isEnoughSpace(treeWeight: number): boolean;
+  collect(treeWeight: number): void;
 }
