@@ -2,6 +2,10 @@ import { Application } from "pixi.js";
 import { convertMatrixToGraphic } from "./utils/renderMatrix";
 import type { IMatrix } from "./types";
 import { Matrix } from "./entities/Matrix";
+import { addStoresToMatrix } from "./helpers/addStoresToMatrix";
+import { addLumberjacksToMatrix } from "./helpers/addLumberjacksToMatrix";
+import { addTreesToMatrix } from "./helpers/addTreesToMatrix";
+import { moveLumberjacks } from "./helpers/moveLumberjacks";
 
 let matrix: IMatrix;
 
@@ -10,14 +14,29 @@ let elapsed = 0;
 (async () => {
   const app = new Application();
 
-  await app.init({ background: "#1099bb", resizeTo: window });
+  await app.init({
+    background: "#1099bb",
+    width: 1000,
+    height: 1000,
+    resizeTo: window,
+  });
 
   matrix = new Matrix({
     rowCount: 10,
     columnCount: 10,
   });
 
-  convertMatrixToGraphic(matrix, 100).forEach((graphic) => {
+  addStoresToMatrix({
+    matrix,
+    storeCount: 3,
+  });
+
+  addLumberjacksToMatrix({
+    matrix,
+    lumberjackCount: 3,
+  });
+
+  convertMatrixToGraphic(matrix, 50).forEach((graphic) => {
     app.stage.addChild(graphic);
   });
 
@@ -25,14 +44,17 @@ let elapsed = 0;
     elapsed += time.deltaMS;
 
     if (elapsed >= 1000) {
-      matrix = new Matrix({
-        rowCount: 10,
-        columnCount: 10,
-      });
-
       app.stage.removeChildren();
 
-      convertMatrixToGraphic(matrix, 100).forEach((graphic) => {
+      addTreesToMatrix({
+        matrix,
+        emptyCellTreeGrowthPossibility: 0.01,
+        cutTreeTreeGrowthPossibility: 0.1,
+      });
+
+      moveLumberjacks({ matrix });
+
+      convertMatrixToGraphic(matrix, 50).forEach((graphic) => {
         app.stage.addChild(graphic);
       });
 
