@@ -1,10 +1,11 @@
-import { CutTreeCell, EmptyCell } from "../entities/Cell";
+import { CutTreeCell } from "../entities/Cell";
 import {
   CellType,
   type Coordinates,
-  type IMatrix,
+  type IMatrix, type IUnit,
   type MatrixSize,
 } from "../types";
+import {TREE_WEIGHT} from "../constants.ts";
 
 class CoordinateCalculator {
   currentPosition: Coordinates;
@@ -135,10 +136,11 @@ export const moveLumberjack = ({
   nextPosition: Coordinates;
   matrix: IMatrix;
 }) => {
-  const lumberjack = matrix.rows[currentPosition.i][currentPosition.j];
+  const lumberjackIndex = matrix.units.findIndex(unit => unit.position.i === currentPosition.i && unit.position.j === currentPosition.j);
 
-  matrix.rows[currentPosition.i][currentPosition.j] = new EmptyCell();
-  matrix.rows[nextPosition.i][nextPosition.j] = lumberjack;
+  if (lumberjackIndex === -1) {return}
+
+  matrix.units[lumberjackIndex].position = nextPosition
 };
 
 export const getNextEmptyCell = ({
@@ -152,6 +154,7 @@ export const getNextEmptyCell = ({
     rowCount: matrix.rows.length,
     columnCount: matrix.rows[0].length,
   });
+
   const nextPositions = coordinateCalculator
     .getNextPositions()
     .filter((nextPosition) => {
@@ -177,6 +180,7 @@ export const getNextTreeCell = ({
     rowCount: matrix.rows.length,
     columnCount: matrix.rows[0].length,
   });
+
   const nextPositions = coordinateCalculator
     .getNextPositions()
     .filter((nextPosition) => {
@@ -194,37 +198,43 @@ export const getNextTreeCell = ({
 export const cutTree = ({
   matrix,
   treePosition,
+  lumberjack
 }: {
   matrix: IMatrix;
   treePosition: Coordinates;
+  lumberjack: IUnit
 }) => {
   matrix.rows[treePosition.i][treePosition.j] = new CutTreeCell();
+  lumberjack.collect(TREE_WEIGHT)
 };
 
 export const moveLumberjacks = ({ matrix }: { matrix: IMatrix }): IMatrix => {
-  const lumberjackCoordinates = matrix.getLumberjacks();
+  const lumberjacks = matrix.getLumberjacks();
 
-  lumberjackCoordinates.forEach((lumberjack) => {
+  lumberjacks.forEach((lumberjack) => {
     const nextTree = getNextTreeCell({
       matrix,
-      currentPosition: lumberjack,
+      currentPosition: lumberjack.position,
     });
 
-    if (nextTree) {
+    if (nextTree && lumberjack.isEnoughSpace(TREE_WEIGHT)) {
       cutTree({
         matrix,
         treePosition: nextTree,
+        lumberjack
       });
+
       return;
     }
 
     const nextPosition = getNextEmptyCell({
       matrix,
-      currentPosition: lumberjack,
+      currentPosition: lumberjack.position,
     });
+
     if (nextPosition) {
       moveLumberjack({
-        currentPosition: lumberjack,
+        currentPosition: lumberjack.position,
         nextPosition,
         matrix,
       });

@@ -36,6 +36,8 @@ let elapsed = 0;
     lumberjackCount: 3,
   });
 
+  console.log(matrix);
+
   convertMatrixToGraphic(matrix, 50).forEach((graphic) => {
     app.stage.addChild(graphic);
   });
@@ -48,7 +50,7 @@ let elapsed = 0;
 
       addTreesToMatrix({
         matrix,
-        emptyCellTreeGrowthPossibility: 0.01,
+        emptyCellTreeGrowthPossibility: 0.3,
         cutTreeTreeGrowthPossibility: 0.1,
       });
 

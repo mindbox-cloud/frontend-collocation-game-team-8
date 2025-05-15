@@ -2,7 +2,7 @@ import {
   CellType,
   type Coordinates,
   type ICell,
-  type IMatrix,
+  type IMatrix, type IUnit,
   type MatrixSize,
 } from "../types";
 
@@ -10,9 +10,11 @@ import { EmptyCell } from "./Cell";
 
 export class Matrix implements IMatrix {
   rows: Array<Array<ICell>>;
+  units: Array<IUnit>
 
   constructor(matrixSize: MatrixSize) {
     this.rows = this.generateEmptyMatrix(matrixSize);
+    this.units = []
   }
 
   private generateEmptyMatrix(matrixSize: MatrixSize) {
@@ -28,7 +30,7 @@ export class Matrix implements IMatrix {
   }
 
   getLumberjacks() {
-    return this.getCoordinatesByType(CellType.LUMBERJACK);
+    return this.units;
   }
 
   getTrees() {
@@ -55,6 +57,24 @@ export class Matrix implements IMatrix {
     }
 
     return coordinates;
+  }
+
+  getLumberjackCoordinates() {
+    return this.units.map(unit => unit.position)
+  }
+
+  getAvailableCells() {
+    return [...this.getEmptyCells(), ...this.getCutTrees()].filter((cell) => {
+      let available = true;
+
+      this.units.forEach((unit) => {
+        if(cell.i === unit.position.i && cell.j === unit.position.j){
+          available = false;
+        }
+      })
+
+      return available
+    });
   }
 
   private generateRow(columnCount: number) {
