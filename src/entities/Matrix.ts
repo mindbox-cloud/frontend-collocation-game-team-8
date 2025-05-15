@@ -2,7 +2,8 @@ import {
   CellType,
   type Coordinates,
   type ICell,
-  type IMatrix, type IUnit,
+  type IMatrix,
+  type IUnit,
   type MatrixSize,
 } from "../types";
 
@@ -10,11 +11,13 @@ import { EmptyCell } from "./Cell";
 
 export class Matrix implements IMatrix {
   rows: Array<Array<ICell>>;
-  units: Array<IUnit>
+  lumberjacks: Array<IUnit>;
+  stores: Array<IUnit>;
 
   constructor(matrixSize: MatrixSize) {
     this.rows = this.generateEmptyMatrix(matrixSize);
-    this.units = []
+    this.lumberjacks = [];
+    this.stores = [];
   }
 
   private generateEmptyMatrix(matrixSize: MatrixSize) {
@@ -30,7 +33,7 @@ export class Matrix implements IMatrix {
   }
 
   getLumberjacks() {
-    return this.units;
+    return this.lumberjacks;
   }
 
   getTrees() {
@@ -38,11 +41,22 @@ export class Matrix implements IMatrix {
   }
 
   getStores() {
-    return this.getCoordinatesByType(CellType.STORE);
+    return this.stores.map((unit) => unit.position);
   }
 
   getCutTrees() {
     return this.getCoordinatesByType(CellType.CUT_TREE);
+  }
+
+  getUnitByCoordinates(coordinates: Coordinates) {
+    const allUnits = [...this.lumberjacks, ...this.stores];
+
+    const unit = allUnits.find(
+      (unit) =>
+        unit.position.i === coordinates.i && unit.position.j === coordinates.j
+    );
+
+    return unit || null;
   }
 
   private getCoordinatesByType(type: CellType) {
@@ -60,20 +74,20 @@ export class Matrix implements IMatrix {
   }
 
   getLumberjackCoordinates() {
-    return this.units.map(unit => unit.position)
+    return this.lumberjacks.map((unit) => unit.position);
   }
 
   getAvailableCells() {
     return [...this.getEmptyCells(), ...this.getCutTrees()].filter((cell) => {
       let available = true;
 
-      this.units.forEach((unit) => {
-        if(cell.i === unit.position.i && cell.j === unit.position.j){
+      this.lumberjacks.forEach((unit) => {
+        if (cell.i === unit.position.i && cell.j === unit.position.j) {
           available = false;
         }
-      })
+      });
 
-      return available
+      return available;
     });
   }
 

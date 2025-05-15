@@ -8,8 +8,12 @@ export enum CellType {
   EMPTY = "empty",
   TREE = "tree",
   CUT_TREE = "cut_tree",
-  STORE = "store",
+}
+
+export enum UnitType {
   LUMBERJACK = "lumberjack",
+  LUMBERJACK_FULL = "lumberjack_full",
+  STORE = "store",
 }
 
 export type Milliseconds = number;
@@ -36,17 +40,24 @@ export interface IMatrix {
   getTrees(): Array<Coordinates>;
   getStores(): Array<Coordinates>;
   getAvailableCells(): Array<Coordinates>;
-  units: IUnit[];
+
+  getUnitByCoordinates(coordinates: Coordinates): IUnit | null;
+  lumberjacks: IUnit[];
+  stores: IUnit[];
 }
 
 export type Inventory = {
   maxCapacity: number;
   currentCapacity: number;
-}
+};
 
 export interface IUnit {
   position: Coordinates;
   inventory: Inventory;
   isEnoughSpace(treeWeight: number): boolean;
   collect(treeWeight: number): void;
+  type: UnitType;
+  color: string;
+  isFull: boolean;
+  unload(): number;
 }

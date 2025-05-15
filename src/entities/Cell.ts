@@ -1,21 +1,5 @@
 import { colors } from "../config";
-import {CellType, type Coordinates, type ICell, type IUnit} from "../types";
-import {DEFAULT_INVENTORY} from "../constants.ts";
-
-
-export class Unit implements IUnit {
-  inventory
-  position
-
-  constructor(position: Coordinates) {
-    this.position = position;
-    this.inventory = DEFAULT_INVENTORY
-  }
-
-  collect(treeWeight: number): void {this.inventory.currentCapacity+= treeWeight}
-
-  isEnoughSpace(treeWeight: number) {return this.inventory.currentCapacity <= this.inventory.maxCapacity - treeWeight;}
-}
+import { CellType, type ICell } from "../types";
 
 export class EmptyCell implements ICell {
   color: string;
