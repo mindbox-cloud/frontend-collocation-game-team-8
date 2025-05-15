@@ -1,17 +1,15 @@
-import { Application, Graphics } from "pixi.js";
-import { Matrix, type IMatrix } from "./components/cell";
+import { Application } from "pixi.js";
 import { convertMatrixToGraphic } from "./utils/renderMatrix";
+import type { IMatrix } from "./types";
+import { Matrix } from "./entities/Matrix";
 
-// Asynchronous IIFE
 let matrix: IMatrix;
 
 let elapsed = 0;
 
 (async () => {
-  // Create a PixiJS application.
   const app = new Application();
 
-  // Intialize the application.
   await app.init({ background: "#1099bb", resizeTo: window });
 
   matrix = new Matrix({

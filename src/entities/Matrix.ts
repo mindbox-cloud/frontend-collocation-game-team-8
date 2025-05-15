@@ -1,26 +1,6 @@
+import type { ICell, IMatrix, MatrixSize } from "../types";
 import { getRandomColor } from "../utils/getRandomColor";
-
-type Milliseconds = number;
-type MatrixSize = {
-  rowCount: number;
-  columnCount: number;
-};
-
-export interface ICell {
-  color: string;
-}
-
-export interface IMatrix {
-  rows: Array<Array<ICell>>;
-}
-
-export class Cell implements ICell {
-  color: string;
-
-  constructor(color: string) {
-    this.color = color;
-  }
-}
+import { Cell } from "./Cell";
 
 export class Matrix implements IMatrix {
   rows: Array<Array<ICell>>;
@@ -44,10 +24,4 @@ export class Matrix implements IMatrix {
   private generateCell() {
     return new Cell(getRandomColor());
   }
-}
-
-export interface Config {
-  cellSize: number;
-  matrixSize: MatrixSize;
-  tickTimeout: Milliseconds;
 }

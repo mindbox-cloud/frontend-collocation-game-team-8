@@ -1,5 +1,5 @@
 import { Graphics } from "pixi.js";
-import type { IMatrix } from "../components/cell";
+import type { IMatrix } from "../types";
 
 export const convertMatrixToGraphic = (
   matrix: IMatrix,
