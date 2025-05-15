@@ -21,16 +21,6 @@ export class TreeCell implements ICell {
   }
 }
 
-export class StoreCell implements ICell {
-  color: string;
-  type: CellType;
-
-  constructor() {
-    this.color = colors[CellType.STORE];
-    this.type = CellType.STORE;
-  }
-}
-
 export class CutTreeCell implements ICell {
   color: string;
   type: CellType;
